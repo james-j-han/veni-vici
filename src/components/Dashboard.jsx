@@ -1,8 +1,9 @@
+import AttributeButton from './AttributeButton';
 
 // outside component so it is declared once and not on every re-render
 const baseURL = 'https://pokeapi.co/api/v2/pokemon';
 
-function Dashboard({ pokemon, setPokemon }) {
+function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban }) {
 
     function getRandomId() {
 
@@ -33,20 +34,36 @@ function Dashboard({ pokemon, setPokemon }) {
             <h1>Dashboard section</h1>
             {
                 pokemon && (
-                <>
+                <div className='pokemon-container'>
                     <h2>{pokemon.name}</h2>
                     <img src={pokemon.sprites.front_default} />
                     <img src={pokemon.sprites.back_default} />
-                    <p>Height: {pokemon.height}</p>
-                    <p>Weight: {pokemon.weight}</p>
-                    <p>Base Exp: {pokemon.base_experience}</p>
-                    {pokemon.abilities.map((abilityObject) => (
-                        <p key={abilityObject.slot}>Ability: {abilityObject.ability.name}</p>
-                    ))}
-                    {pokemon.types.map((typeObject) => (
-                        <p key={typeObject.slot}>Type: {typeObject.type.name}</p>
-                    ))}
-                </>
+                    <div className='attributes-container'>
+                        <AttributeButton label='Height' value={pokemon.height} banList={banList} onBan={onBan} onUnban={onUnban} />
+                        <AttributeButton label='Weight' value={pokemon.weight} banList={banList} onBan={onBan} onUnban={onUnban} />
+                        <AttributeButton label='Base Exp' value={pokemon.base_experience} banList={banList} onBan={onBan} onUnban={onUnban} />
+                        {pokemon.abilities.map((abilityObject) => (
+                            <AttributeButton
+                                key={abilityObject.slot}
+                                label='Ability'
+                                value={abilityObject.ability.name}
+                                banList={banList}
+                                onBan={onBan}
+                                onUnban={onUnban}
+                            />
+                        ))}
+                        {pokemon.types.map((typeObject) => (
+                            <AttributeButton
+                                key={typeObject.slot}
+                                label='Type'
+                                value={typeObject.type.name}
+                                banList={banList}
+                                onBan={onBan}
+                                onUnban={onUnban}
+                            />
+                        ))}
+                    </div>
+                </div>
             )}
             <button onClick={fetchData}>Discover!</button>
         </div>
