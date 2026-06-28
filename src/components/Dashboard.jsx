@@ -3,7 +3,7 @@ import AttributeButton from './AttributeButton';
 // outside component so it is declared once and not on every re-render
 const baseURL = 'https://pokeapi.co/api/v2/pokemon';
 
-function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban }) {
+function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban, onDiscover }) {
 
     function getRandomId() {
 
@@ -24,6 +24,8 @@ function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban }) {
             const data = await response.json();
             // console.log(data);
             setPokemon(data);
+            // add to history list
+            onDiscover(data);
         } catch (error) {
             console.error('Something went wrong: ', error);
         }
@@ -65,7 +67,7 @@ function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban }) {
                     </div>
                 </div>
             )}
-            <button onClick={fetchData}>Discover!</button>
+            <button className='discover-button' onClick={fetchData}>Discover!</button>
         </div>
     )
 }

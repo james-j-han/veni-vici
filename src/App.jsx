@@ -3,11 +3,14 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Dashboard'
+import BanList from './components/BanList'
+import HistoryList from './components/HistoryList'
 
 function App() {
   const [pokemon, setPokemon] = useState(null);
   const [banList, setBanList] = useState([]);
+  const [history, setHistory] = useState([]);
   
   function onBan(attribute) {
     console.log('Banned');
@@ -17,6 +20,7 @@ function App() {
     }
   }
 
+  // testing purposes to log to console
   useEffect(() => {
     console.log(banList);
   }, [banList]);
@@ -26,10 +30,16 @@ function App() {
     setBanList(banList.filter((item) => item !== attribute));
   }
 
+  function onDiscover(pokemon) {
+    setHistory([...history, pokemon]);
+  }
+
   return (
-    <>
-    <Dashboard pokemon={pokemon} setPokemon={setPokemon} banList={banList} onBan={onBan} onUnban={onUnban}/>
-    </>
+    <div className='main-container'>
+      <Dashboard pokemon={pokemon} setPokemon={setPokemon} banList={banList} onBan={onBan} onUnban={onUnban} onDiscover={onDiscover}/>
+      <BanList />
+      <HistoryList history={history} />
+    </div>
   )
 }
 
