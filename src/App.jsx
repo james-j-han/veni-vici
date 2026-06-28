@@ -13,7 +13,6 @@ function App() {
   const [history, setHistory] = useState([]);
   
   function onBan(attribute) {
-    console.log('Banned');
     // exclude duplicates
     if (!banList.includes(attribute)) {
       setBanList([...banList, attribute]);
@@ -26,7 +25,6 @@ function App() {
   }, [banList]);
 
   function onUnban(attribute) {
-    console.log('Unbanned');
     setBanList(banList.filter((item) => item !== attribute));
   }
 
@@ -37,7 +35,7 @@ function App() {
   return (
     <div className='main-container'>
       <Dashboard pokemon={pokemon} setPokemon={setPokemon} banList={banList} onBan={onBan} onUnban={onUnban} onDiscover={onDiscover}/>
-      <BanList />
+      <BanList banList={banList} onUnban={onUnban} />
       <HistoryList history={history} />
     </div>
   )

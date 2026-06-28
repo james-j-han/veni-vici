@@ -22,7 +22,8 @@ button {
 }
 
 .discover-button {
-  background-color: rgb(56, 49, 49);
+  background-color: rgb(51, 140, 45);
+  margin-bottom: 20px;
 }
 
 .history-list {

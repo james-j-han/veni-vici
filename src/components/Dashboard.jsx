@@ -8,24 +8,54 @@ function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban, onDiscover })
     function getRandomId() {
 
         // hardcoded max range but could be improved for customization
-        return Math.floor(Math.random() * 1351) + 1;
+        return Math.floor(Math.random() * 10) + 1;
     }
 
     async function fetchData() {
-        // build url
-        const randomId = getRandomId();
-        const url = `${baseURL}/${randomId}`;
-
         try {
-            // fetch url and check for http errors
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error: ${response.error}`);
+            let foundPokemon = null;
+            // limit number of attempts
+            let attempts = 0;
+            let maxAttempts = 10;
 
-            const data = await response.json();
-            // console.log(data);
-            setPokemon(data);
-            // add to history list
-            onDiscover(data);
+            while (!foundPokemon && attempts < maxAttempts) {
+                attempts++;
+                // build url
+                const randomId = getRandomId();
+                const url = `${baseURL}/${randomId}`;
+
+                // fetch url and check for http errors
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error: ${response.error}`);
+                const data = await response.json();
+
+                // current pokemon attributes to compare with ban list
+                const attributes = [
+                    `Height: ${data.height}`,
+                    `Weight: ${data.Weight}`,
+                    `Base Exp: ${data.base_experience}`,
+                    ...data.types.map((t) => `Type: ${t.type.name}`),
+                    ...data.abilities.map((a) => `Ability: ${a.ability.name}`)
+                ];
+
+                // compare if any attributes are on ban list
+                const isBanned = attributes.some((attr) => banList.includes(attr));
+
+                if (!isBanned) {
+                    foundPokemon = data;
+                }
+            }
+
+            if (foundPokemon) {
+                // console.log(data);
+                setPokemon(foundPokemon);
+                // add to history list
+                onDiscover(foundPokemon);
+            } else {
+                console.error('Could not find a valid Pokemon, ban list may be too restrictive');
+                alert('Could not find a valid Pokemon, ban list may be too restrictive');
+            }
+
         } catch (error) {
             console.error('Something went wrong: ', error);
         }
@@ -34,6 +64,7 @@ function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban, onDiscover })
     return (
         <div className="dashboard">
             <h1>Dashboard section</h1>
+            <button className='discover-button' onClick={fetchData}>Discover!</button>
             {
                 pokemon && (
                 <div className='pokemon-container'>
@@ -67,7 +98,6 @@ function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban, onDiscover })
                     </div>
                 </div>
             )}
-            <button className='discover-button' onClick={fetchData}>Discover!</button>
         </div>
     )
 }
