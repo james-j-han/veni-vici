@@ -8,7 +8,7 @@ function Dashboard({ pokemon, setPokemon, banList, onBan, onUnban, onDiscover })
     function getRandomId() {
 
         // hardcoded max range but could be improved for customization
-        return Math.floor(Math.random() * 10) + 1;
+        return Math.floor(Math.random() * 1000) + 1;
     }
 
     async function fetchData() {
